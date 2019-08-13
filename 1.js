@@ -1,0 +1,140 @@
+/*
+ * @Author: 咸鱼
+ * @Date: 2019-08-13 00:01:32
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2019-08-14 03:03:15
+ * @Description: 【创建型设计模式】
+ */
+/* 简单工厂模式
+  <--------------------------简单工厂模式start----------------------------->
+ */
+//创建对象，拓展对象属性和方法
+const SimpleFactory = function (name, type) {
+    const o = new Object();
+    o.name = name;
+    o.type = type;
+    o.FnShow = function () {
+        //对象功能方法
+        console.log(this.name)
+        console.log(this.type)
+    }
+    return o;
+};
+// 通过工厂创建一个对象
+const bx = SimpleFactory("AB", "1");
+//<--------------------------简单工厂模式end-----------------------------> 
+
+// 2、工厂方法模式
+//  <--------------------------工厂方法模式start-----------------------------> 
+// 工厂内置N中类型方法
+const Factory = function (type, content) {
+    // 安全模式：
+    // 检测this是否属于Factory函数，不属于则创建，属于则调用对应方法
+    // 同事兼容了使用new关键字和未使用new关键字的调用方式
+    if (this instanceof Factory) {
+        const s = new this[type](content);
+        return s
+    } else {
+        return new Factory(type, content)
+    }
+}
+// 原型中设置数据基类
+Factory.prototype = {
+    Css: function (content) {
+        console.log("css:", content)
+    },
+    JavaScript: function (content) {
+        console.log("javascript:", content)
+    }
+}
+// 通过工厂调用设置好的方法输出
+const h = new Factory("JavaScript", "6666666666");
+//  <--------------------------工厂方法模式end-----------------------------> 
+
+// 抽象工厂模式
+//  <--------------------------抽象工厂模式start-----------------------------> 
+const VehicleFactory = function (subType, superType) {
+    // 验证工厂中是否存在该类生产方案
+    if (typeof VehicleFactory[superType] === "function") { 
+        function F() {};    //初始化一条生产线
+        F.prototype = new VehicleFactory[superType]();  //把对应生产方案放在该条生产线上
+        subType.constructor = subType;    //打上标签该线生产某种产品
+        subType.prototype = new F();      //提交生产方案，下放到具体生产
+        return subType
+    } else {
+        throw new error("未创建该抽象类")
+    }
+}
+// （工厂中的小汽车类生产方案）
+VehicleFactory.Car = function () {
+    this.type = "car"
+}
+VehicleFactory.Car.prototype = {
+    getPrice: function () {
+        return new Error("抽象方法不能调用")
+    },
+    getSpeed: function () {
+        return new Error("抽象方法不能调用")
+    }
+}
+// （工厂中的公交车生产线方案）
+VehicleFactory.Bus = function () {
+    this.type = "bus"
+}
+VehicleFactory.Bus.prototype = {
+    getPrice: function () {
+        return new Error("抽象方法不能调用")
+    },
+    getSpeed: function () {
+        return new Error("抽象方法不能调用")
+    }
+}
+// 使用
+// 创建一条宝马生产线  需要输入生产宝马的属性，才能生产对应的宝马
+const BMW = function (Price, Speed) {
+    this.Price = Price;  
+    this.Speed = Speed;
+}
+VehicleFactory(BMW, "Car");  //继承已存在的生产方案
+BMW.prototype.getPrice = function () {   //添加需要的功能设备
+    return this.Price;
+}
+BMW.prototype.getSpeed = function () {
+    return this.Speed;
+}
+
+// 宇通
+const YUTONG = function (Price, Speed) {
+    this.Price = Price;
+    this.Speed = Speed;
+}
+VehicleFactory(YUTONG, "Bus");
+// 输出测试
+const bm1 = new BMW("800,000", 300);  //生产了一台80W的，速度为300km/h的宝马车，产自 Car 生产线
+console.log(bm1.getPrice());
+console.log(bm1.getSpeed());
+console.log(bm1.type);
+const yt1 = new YUTONG("2000,000", 240);
+console.log(yt1.getPrice());
+console.log(yt1.getSpeed());
+console.log(yt1.type);
+//  <--------------------------抽象工厂模式end-----------------------------> 
+
+// 建造者模式
+//  <--------------------------建造者模式start-----------------------------> 
+
+
+//  <--------------------------建造者模式end-----------------------------> 
+
+// 原型模式
+//  <--------------------------原型模式start-----------------------------> 
+
+
+//  <--------------------------原型模式end-----------------------------> 
+
+// 单例模式
+//  <--------------------------单例模式start-----------------------------> 
+
+
+//  <--------------------------单例模式end-----------------------------> 
+
